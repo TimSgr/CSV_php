@@ -23,6 +23,7 @@ echo "Zeilennummer | ";
 $size = count($header);
 foreach ($header as $index => $spalte) {   
     if ($index != $size - 1) {
+        echo $spalte;
         echo  " | ";
     }
 
@@ -36,16 +37,21 @@ foreach($records as $key => $zeile){
     echo "$key " . " | ";
     $size=count($zeile);
     foreach($zeile as $index => $element){
-        // if(!is_string($element)) echo  "$element";
-        // if(!is_float($element))  echo  "$element";   
-        // if(!is_float($element))  echo  "$element";
+        $element = str_replace( [',','.'], '.', "$element" );
         
-        
-        echo "$element";
-        if ($index != $size - 1) {
+        if(is_numeric($element)){
+              
+            // echo "##$number \n";
+                if(ctype_digit($element))     echo  "$element(int)"; 
+                else echo  $element . "(double)";
+                // echo "$element;
+            }
+            else echo "$element(string)";
+            if ($index != $size - 1) {
             echo  " | ";
         }
     }
     echo "\n";
     // var_dump($zeile);
 }
+?>
