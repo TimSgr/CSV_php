@@ -4,7 +4,8 @@ League CSV dient dazu, die Daten aus einem CSV Dokument auszulesen.
 Die json-Datei gibt z.b. an, welche Version von league csv verwendet werden soll bzw das diese ausgewählte Version beötigt wird.
 
 
-``` bash
-php CSV003.php < data_train.csv  
-```
+``` bash 
+# Anwendungsbeispiel
+php CSV003.php < data_train.csv   >  Tabelle.md
+``` 
 
