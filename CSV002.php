@@ -1,7 +1,8 @@
 <?php
-$array=array("Welches Bier ist es","Alkoholgehalt (*alcohol by volume*)","Wie herb das Bier ist",
-"Durchschnittliche Bewertung des Biers durch Testkunden (Prozent zwischen 0 und 100)",
-"Wie viele Kunden laut einer Online-Umfrage das Bier kennen", "In welchem Land das Bier gebraut wird");
+$array=array("Nummer der Bestellung","Artikelnummer","Beschreibung des Artikels",
+"Bestellte Anzahl des Artikels", "Zeitpunkt der Bestellung", "Preis des Artikels in britischen Pfund", "Kundennummer",
+"Land aus dem die Bestellung einging");
+
 
 require_once 'vendor/autoload.php';
 
@@ -9,9 +10,9 @@ require_once 'vendor/autoload.php';
 use League\Csv\Reader;
 
 //load the CSV document from a file path
-$csv = Reader::createFromPath('./beer_rating_data_train.csv', 'r');
+$csv = Reader::createFromPath('./online_retail_data.csv', 'r');
 $csv->setHeaderOffset(0);
-$csv->setDelimiter(';');
+$csv->setDelimiter(',');
 $delimiter = $csv->getDelimiter(); //returns ";"
 // echo "$delimiter";
 
@@ -25,32 +26,34 @@ echo "Spaltennummer | Spaltenname | Datenniveau | Beschreibung";
 
 echo "\n";
 $size = count($header);
-for ($i=3; $i<$size; $i++) {
+for($i=3;$i<$size;$i++){
     echo "---|";
 }
 echo "--- \n";
 $l=0;
 $j=0;
 
-foreach ($records as $key => $zeile) {
-    foreach ($zeile as $index => $element) {
+foreach($records as $key => $zeile){
+    foreach($zeile as $index => $element){
           if($j<$size){
-            echo "$key " . " | ";
-            echo " `'" . $header[$j] . "'` | ";
-            $element = str_replace( [',','.'], '.', "$element" );
-            if(is_numeric($element)){
-                // echo "##$number \n";
-                if(ctype_digit($element))     echo  "kontinuierlich (`int`) | "; 
-                else                          echo  "kontinuierlich (`float`) | ";
-                // echo "$element;
-            }
-            elseif($element=="???"){ echo "kontinuierlich (`float`) | ";}
-            else echo "kategorisch (nominal) | ";
-            echo $array[$l];
-            echo "\n";
-            $j++;
-            $key++;
-            $l++;
+             echo "$key " . " | ";
+             echo " `'".$header[$j] . "'` | ";
+             $element = str_replace( [',','.'], '.', "$element" );
+             
+             if (DateTime::createFromFormat('Y-m-d H:i:s', $element) !== FALSE) echo "kontinuierlich (`datetime`) | ";
+                if(is_numeric($element)){
+                    round($element,1);
+                 // echo "##$number \n";
+                 if(ctype_digit($element))     echo  "kontinuierlich (`int`) | "; 
+                 else                          echo  "kontinuierlich (`float`) | ";
+                 // echo "$element;
+             }
+                else echo "kategorisch (nominal) | ";
+             echo $array[$l];
+             echo "\n";
+             $j++;
+             $key++;
+             $l++;
           }
     }
 }
